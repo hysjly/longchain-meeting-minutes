@@ -22,8 +22,9 @@ class LLMSettings:
     transcript_chunk_chars: int = 6000
 
 
-def load_settings() -> LLMSettings:
-    load_dotenv()
+def load_settings(*, load_dotenv_file: bool = True) -> LLMSettings:
+    if load_dotenv_file:
+        load_dotenv()
     api_key = os.getenv("MIMO_API_KEY") or os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise ValueError("MIMO_API_KEY is required for OpenAI-compatible MiMo calls.")

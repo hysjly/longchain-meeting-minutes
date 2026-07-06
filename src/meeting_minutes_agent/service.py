@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from typing import Any
 
 from meeting_minutes_agent.config import load_settings
@@ -14,6 +15,7 @@ def generate_minutes(
     *,
     speaker_chain: Any | None = None,
     minutes_chain: Any | None = None,
+    progress_callback: Callable[[str], None] | None = None,
 ) -> str:
     document = adapt_transcript(input_data)
 
@@ -27,10 +29,19 @@ def generate_minutes(
         max_chars = 6000
 
     chunks = chunk_segments(document.segments, max_chars=max_chars)
+    _notify(progress_callback, "speaker_inference_start")
     inference = speaker_chain.infer(document, chunks)
+    _notify(progress_callback, "speaker_inference_done")
+    _notify(progress_callback, "minutes_generation_start")
     markdown = minutes_chain.generate(document, inference)
+    _notify(progress_callback, "minutes_generation_done")
 
     return _with_metadata_front_matter(document, inference, markdown)
+
+
+def _notify(progress_callback: Callable[[str], None] | None, event: str) -> None:
+    if progress_callback is not None:
+        progress_callback(event)
 
 
 def _with_metadata_front_matter(

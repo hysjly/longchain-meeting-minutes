@@ -10,7 +10,7 @@ def test_cli_run_writes_output_file(tmp_path, monkeypatch):
 
     monkeypatch.setattr(
         "meeting_minutes_agent.cli.generate_minutes",
-        lambda payload: "# 会议纪要\n\n## 会议概览\n- 测试。\n",
+        lambda payload, **kwargs: "# 会议纪要\n\n## 会议概览\n- 测试。\n",
     )
 
     result = CliRunner().invoke(app, ["run", str(input_path), "-o", str(output_path)])
@@ -25,7 +25,7 @@ def test_cli_run_prints_stdout_when_output_is_omitted(tmp_path, monkeypatch):
 
     monkeypatch.setattr(
         "meeting_minutes_agent.cli.generate_minutes",
-        lambda payload: "# 会议纪要\n\n## 会议概览\n- 测试。\n",
+        lambda payload, **kwargs: "# 会议纪要\n\n## 会议概览\n- 测试。\n",
     )
 
     result = CliRunner().invoke(app, ["run", str(input_path)])
@@ -38,7 +38,7 @@ def test_cli_run_shows_concise_configuration_error(tmp_path, monkeypatch):
     input_path = tmp_path / "input.json"
     input_path.write_text('{"recordId":"abc","text":"今天讨论排期。"}', encoding="utf-8")
 
-    def raise_config_error(payload):
+    def raise_config_error(payload, **kwargs):
         raise ValueError("MIMO_API_KEY is required for OpenAI-compatible MiMo calls.")
 
     monkeypatch.setattr("meeting_minutes_agent.cli.generate_minutes", raise_config_error)
@@ -60,7 +60,7 @@ def test_cli_run_shows_concise_provider_error(tmp_path, monkeypatch):
         {"__module__": "openai"},
     )
 
-    def raise_provider_error(payload):
+    def raise_provider_error(payload, **kwargs):
         raise ProviderAuthenticationError("Error code: 401 - Invalid API Key")
 
     monkeypatch.setattr("meeting_minutes_agent.cli.generate_minutes", raise_provider_error)

@@ -1,0 +1,16 @@
+services:
+  meeting-minutes-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: meeting-minutes-agent:latest
+    env_file:
+      - .env
+    volumes:
+      - ./samples:/app/samples:ro
+      - ./outputs:/app/outputs
+    command:
+      - run
+      - samples/done_text.json
+      - -o
+      - outputs/minutes.md

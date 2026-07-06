@@ -134,6 +134,68 @@ MIMO_MODEL=你的本地模型名
 MIMO_API_KEY=本地服务需要的key或占位key
 ```
 
+## Docker 部署运行
+
+这套 Docker 配置适合你用 MobaXterm SSH 到公司 Linux 服务器后运行。假设代码已经上传到服务器项目目录，先进入项目目录：
+
+```bash
+cd /path/to/LongChain语音转会议纪要
+```
+
+服务器上准备 `.env`：
+
+```bash
+cp .env.example .env
+nano .env
+```
+
+把 `MIMO_API_KEY` 改成真实有效 key。`.env` 不会被打进镜像，运行时由 `docker compose` 注入容器。
+
+注意：`docker compose config` 会把 `.env` 里的环境变量展开到终端输出里，不要把它的完整输出贴到公开位置。
+
+首次构建镜像：
+
+```bash
+docker compose build
+```
+
+运行默认样例，生成 `outputs/minutes.md`：
+
+```bash
+docker compose up --abort-on-container-exit
+```
+
+如果只想看一次性运行日志，也可以用：
+
+```bash
+docker compose run --rm meeting-minutes-agent run samples/done_text.json -o outputs/minutes.md
+```
+
+运行家庭对话样例：
+
+```bash
+docker compose run --rm meeting-minutes-agent run samples/family_care_done_text.json -o outputs/family_care_minutes.md
+```
+
+输出文件会保存在服务器项目目录的 `outputs/` 下。查看结果：
+
+```bash
+cat outputs/minutes.md
+```
+
+如果你把新的逐字稿 JSON 放到服务器项目目录的 `samples/your_transcript.json`，运行：
+
+```bash
+docker compose run --rm meeting-minutes-agent run samples/your_transcript.json -o outputs/your_minutes.md
+```
+
+后续代码更新后，重新构建再运行：
+
+```bash
+docker compose build --no-cache
+docker compose run --rm meeting-minutes-agent run samples/done_text.json -o outputs/minutes.md
+```
+
 ## 开发验证
 
 ```powershell

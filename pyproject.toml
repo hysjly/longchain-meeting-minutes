@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "meeting-minutes-agent"
+version = "0.1.0"
+description = "LangChain agent that converts FunASR transcripts into structured Chinese meeting minutes."
+requires-python = ">=3.12"
+dependencies = [
+    "langchain>=0.3.0",
+    "langchain-openai>=0.2.0",
+    "pydantic>=2.7.0",
+    "python-dotenv>=1.0.0",
+    "typer>=0.12.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+]
+
+[project.scripts]
+meeting-minutes-agent = "meeting_minutes_agent.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

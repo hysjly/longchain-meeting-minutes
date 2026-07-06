@@ -1,0 +1,28 @@
+{
+  "recordId": "meeting-001",
+  "duration": 1800.0,
+  "audioUrl": "/api/records/meeting-001/audio",
+  "transcript": [
+    {
+      "speaker": "Speaker 1",
+      "start": 1.02,
+      "end": 4.46,
+      "text": "王姐，今天我们主要确认项目排期。",
+      "confidence": null
+    },
+    {
+      "speaker": "Speaker 2",
+      "start": 4.47,
+      "end": 9.88,
+      "text": "我这边下周三前把第一版方案发出来。",
+      "confidence": 0.91
+    },
+    {
+      "speaker": "Speaker 1",
+      "start": 9.89,
+      "end": 15.2,
+      "text": "客户这边还要确认接口文档，负责人和截止时间先标未明确。",
+      "confidence": 0.88
+    }
+  ]
+}
